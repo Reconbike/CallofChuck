@@ -58,7 +58,7 @@ var tileset = document.createElement("img");
 tileset.src = "tileset.png";
 
 
-function drawMap() // currently not being called to run? this function is just skipped  leading to no map being drawn
+function drawMap()
 {
 	for(var layerIdx=0; layerIdx<LAYER_COUNT; layerIdx++)
 	{
@@ -84,15 +84,18 @@ function drawMap() // currently not being called to run? this function is just s
 
 function run()
 {
+	drawMap();
+
 	context.fillStyle = "#ccc";		
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	
 	var deltaTime = getDeltaTime();
-	
+	drawMap();
+
 	player.update(deltaTime);
 	player.draw();
 
-	context.run 
+	
 
 	// update the frame counter 
 	fpsTime += deltaTime;
