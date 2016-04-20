@@ -6,9 +6,9 @@ var Player = function() {
 	this.width = 159;
 	this.height = 163;
 
-	this.position = new Vector2( 9*TILE, 0*TILE );
+	this.position = new Vector2( 9*35, 0*35);
 
-	this.velocity = new Vector2();
+	this.velocity = new Vector2(0,0);
 
 	this.offset = new Vector2(-55, -87);
 

@@ -35,10 +35,6 @@ var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
 
-// load an image to draw
-var player = new Player();
-var keyboard = new Keyboard()
-
 // Listed variables used for calls
 var LAYER_COUNT = 3;
 var MAP = { tw: 60, th: 15 };
@@ -52,6 +48,10 @@ var LAYER_COUNT = 3;
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_LADDERS = 2;
+
+// load an image to draw
+var player = new Player();
+var keyboard = new Keyboard()
 
  // abitrary choice for 1m
 var METER = TILE;
