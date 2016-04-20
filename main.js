@@ -104,10 +104,10 @@ function cellAtTileCoord(layer,tx,ty)
 
 function cellAtPixelCoord(layer,x,y)
 {
-	if(px<0 || x>SCREEN_WIDTH|| py < 0)
+	if(x<0 || x>SCREEN_WIDTH|| y < 0)
 		return 1;
 	// let the player drop of the bottom of the screen (this means death)
-	if(py>SCREEN_HEIGHT)
+	if(y>SCREEN_HEIGHT)
 		return 0;
 	return cellAtTileCoord(layer,pixelToTile(x),pixelToTile(y));
 };
