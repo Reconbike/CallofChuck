@@ -10,7 +10,7 @@ var Player = function() {
 
 	this.velocity = new Vector2(0,0);
 
-	this.offset = new Vector2(-55, -87);
+	this.offset = new Vector2(-55,-87);
 
 	this.falling = true;
 	this.jumping = false;
