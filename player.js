@@ -8,10 +8,10 @@ var ANIM_WALK_LEFT = 2;
 var ANIM_IDLE_RIGHT = 3;
 var ANIM_JUMP_RIGHT = 4;
 var ANIM_WALK_RIGHT = 5;
-var ANIM_CLIMB = 6;
-var ANIM_SHOOT_LEFT = 7;
-var ANIM_SHOOT_RIGHT = 8;
-var ANIM_MAX = 9;
+//var ANIM_CLIMB = 6;
+///var ANIM_SHOOT_LEFT = 7;
+//var ANIM_SHOOT_RIGHT = 8;
+var ANIM_MAX = 6;
 
 var Player = function() {
 	//this.sprite = new sprite(dir);
@@ -43,7 +43,7 @@ var Player = function() {
 	this.falling = true;
 	this.jumping = false;
 
-	this.direction = RIGHT;
+	this.direction = LEFT;
 
 };
 
@@ -108,7 +108,7 @@ Player.prototype.update = function(deltaTime)
 	 var wasleft = this.velocity.x < 0;
 	 var wasright = this.velocity.x > 0;
 	 var falling = this.falling;
-	 var ddx = 0; // this is the acceleration
+	 var ddx = 0; // this for acceleration control
 	 var ddy = GRAVITY;
 
 	if (left)
@@ -128,7 +128,7 @@ Player.prototype.update = function(deltaTime)
 	 else
 	 	this.sprite.setAnimation(ANIM_JUMP_RIGHT)
 	}
-	 // Calculation for the new velocity after these changes 
+	 // Calculation for velocity
 	 this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
 	 this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
 	 this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
