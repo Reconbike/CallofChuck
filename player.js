@@ -14,8 +14,6 @@ var ANIM_WALK_RIGHT = 5;
 var ANIM_MAX = 6;
 
 var Player = function() {
-	//this.sprite = new sprite(dir);
-
 	this.sprite = new Sprite("ChuckNorris.png");
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,[0, 1, 2, 3, 4, 5, 6, 7]);
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,[8, 9, 10, 11, 12]);
@@ -187,5 +185,4 @@ Player.prototype.update = function(deltaTime)
 Player.prototype.draw = function()
 {
 	this.sprite.draw(context, this.position.x, this.position.y);
-	//context.fillRect(posX, posY, width, height)
 }

@@ -165,16 +165,33 @@ function initialize()
 	}
 }
 
+function DrawLevelCollisionData(tileLayer) {
+    for (var y = 0; y < level1.layers[tileLayer].height; y++) 
+    {
+        for (var x = 0; x < level1.layers[tileLayer].width; x++) 
+        {
+            if (cells[tileLayer][y][x] == 1) 
+            {
+                context.fillStyle = "#F00";
+                context.fillRect(TILE * x, TILE * y, TILE, TILE);
+            }
+        }
+    }
+}
+
 function run()
 {
 	context.fillStyle = "#ccc";		
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	
 	var deltaTime = getDeltaTime();
+	
 	drawMap();
 
+	DrawLevelCollisionData(1);
 	player.update(deltaTime);
 	player.draw();
+
 
 	
 
