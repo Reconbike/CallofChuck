@@ -137,21 +137,26 @@ function drawMap()
 }
 
 var cells = []; // this array will contain the collision data
-function initialize() {
- for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) { // initialize the collision map
- 	cells[layerIdx] = [];
- 	var idx = 0;
- 	for(var y = 0; y < level1.layers[layerIdx].height; y++) {
- 		cells[layerIdx][y] = [];
- 		for(var x = 0; x < level1.layers[layerIdx].width; x++) {
- 			if(level1.layers[layerIdx].data[idx] != 0) {
+function initialize() 
+{
+	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) 
+	{ // initialize the collision map
+ 		cells[layerIdx] = [];
+ 		var idx = 0;
+ 		for(var y = 0; y < level1.layers[layerIdx].height; y++) 
+ 		{
+ 			cells[layerIdx][y] = [];
+ 			for(var x = 0; x < level1.layers[layerIdx].width; x++) 
+ 			{
+ 				if(level1.layers[layerIdx].data[idx] != 0) 
+ 				{
 					cells[layerIdx][y][x] = 1;
 					cells[layerIdx][y-1][x] = 1;
 					cells[layerIdx][y-1][x+1] = 1;
 					cells[layerIdx][y][x+1] = 1;
 				}
-				else if(cells[layerIdx][y][x] != 1) {
-
+				else if(cells[layerIdx][y][x] != 1) 
+				{
 					cells[layerIdx][y][x] = 0;
 				}
 				idx++;
