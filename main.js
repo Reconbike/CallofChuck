@@ -98,7 +98,7 @@ function cellAtTileCoord(layer,tx,ty)
 	// let the player drop of the bottom of the screen (this means death)
 	if(ty>=MAP.th)
 		return 0;
-	return cells[layer][tx][ty];
+	return cells[layer][ty][tx];
 };
 
 
@@ -165,7 +165,7 @@ function initialize()
 	}
 }
 
-function DrawLevelCollisionData(tileLayer) {
+/*function DrawLevelCollisionData(tileLayer) {
     for (var y = 0; y < level1.layers[tileLayer].height; y++) 
     {
         for (var x = 0; x < level1.layers[tileLayer].width; x++) 
@@ -177,7 +177,7 @@ function DrawLevelCollisionData(tileLayer) {
             }
         }
     }
-}
+}*/
 
 function run()
 {
@@ -188,7 +188,7 @@ function run()
 	
 	drawMap();
 
-	DrawLevelCollisionData(1);
+	//DrawLevelCollisionData(1);
 	player.update(deltaTime);
 	player.draw();
 

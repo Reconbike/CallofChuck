@@ -38,7 +38,7 @@ var Player = function() {
 	this.velocity = new Vector2(0,0);
 
 
-	this.falling = true;
+	this.falling = false;
 	this.jumping = false;
 
 	this.direction = LEFT;
