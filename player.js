@@ -43,6 +43,8 @@ var Player = function() {
 
 	this.direction = LEFT;
 
+	this.cooldownTimer = 0;
+
 };
 
 Player.prototype.update = function(deltaTime)
@@ -102,6 +104,14 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_JUMP_RIGHT);
 		} 
 	 }
+	if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true && this.cooldownTimer <= 0) 
+		{
+			sfxFire.play();
+			this.cooldownTimer = 0.3;
+			console.log("shots fires");
+		}
+
+
 
 	 var wasleft = this.velocity.x < 0;
 	 var wasright = this.velocity.x > 0;
@@ -184,5 +194,5 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x, this.position.y);
+	this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
 }

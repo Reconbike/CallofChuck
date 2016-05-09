@@ -36,8 +36,9 @@ var fpsCount = 0;
 var fpsTime = 0;
 
 // Listed variables used for calls
-var LAYER_COUNT = 3;
-var MAP = { tw: 60, th: 15 };
+var worldOffsetX =0;
+var musicBackground;
+var sfxFire;
 var TILE = 35;
 var TILESET_TILE = TILE * 2;
 var TILESET_PADDING = 2;
@@ -48,6 +49,7 @@ var LAYER_COUNT = 3;
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_LADDERS = 2;
+var MAP = { tw: 60, th: 15 };
 
 // load an image to draw
 var player = new Player();
@@ -116,24 +118,50 @@ function cellAtPixelCoord(layer,x,y)
 
 function drawMap()
 {
-	for(var layerIdx=0; layerIdx<LAYER_COUNT; layerIdx++)
+	var startX = -1;
+	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var tileX = pixelToTile(player.position.x);
+	var offsetX = TILE + Math.floor(player.position.x%TILE);
+
+	startX = tileX - Math.floor(maxTiles / 2);
+
+	if(startX < -1)
 	{
-		var idx = 0;
+		startX = 0;
+		offsetX = 0;
+	}
+	if(startX > MAP.tw - maxTiles)
+	{
+		startX = MAP.tw - maxTiles + 1;
+		offsetX = TILE;
+	}
+
+	 worldOffsetX = startX * TILE + offsetX;
+
+	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
+	{
 		for( var y = 0; y < level1.layers[layerIdx].height; y++ )
 		{
-			for( var x = 0; x < level1.layers[layerIdx].width; x++ )
+			var idx = y * level1.layers[layerIdx].width + startX;
+			for( var x = startX; x < startX + maxTiles; x++ )
 			{
 				if( level1.layers[layerIdx].data[idx] != 0 )
 				{
+					// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
+					// so subtract one from the tileset id to get the
+					// correct tile
 					var tileIndex = level1.layers[layerIdx].data[idx] - 1;
-					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
-					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
-					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
+					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) *
+						(TILESET_TILE + TILESET_SPACING);
+					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_Y)) *
+						(TILESET_TILE + TILESET_SPACING);
+					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE,
+						(x-startX)*TILE - offsetX, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
 				}
 				idx++;
 			}
 		}
-    }
+	}
 }
 
 var cells = []; // this array will contain the collision data
@@ -163,6 +191,25 @@ function initialize()
 			}
 		}
 	}
+
+	musicBackground = new Howl(
+	{
+		urls:["background.ogg"],
+		loop: true,
+		buffer: true,
+		volume: 0.5
+	});
+	musicBackground.play();
+
+	sfxFire = new Howl(
+	{
+		urls:["fireEffect.ogg"],
+		buffer: true,
+		volume: 1,
+		onend: function(){
+			isSfxPlaying = false;
+		}
+	});
 }
 
 /*function DrawLevelCollisionData(tileLayer) {
@@ -186,15 +233,13 @@ function run()
 	
 	var deltaTime = getDeltaTime();
 	
+	player.update(deltaTime);
+
 	drawMap();
 
 	//DrawLevelCollisionData(1);
-	player.update(deltaTime);
 	player.draw();
-
-
 	
-
 	// updating the FPS counter 
 	fpsTime += deltaTime;
 	fpsCount++;
