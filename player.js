@@ -190,6 +190,10 @@ Player.prototype.update = function(deltaTime)
 	this.velocity.x = 0; // stop horizontal velocity on hit
 			}
 		}
+	if(cellAtTileCoord(LAYER_TRIGGERS, tx, ty) == true)
+	{
+		// game state switches to VICTORY
+	}
 }
 
 Player.prototype.draw = function()

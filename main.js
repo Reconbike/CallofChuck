@@ -49,6 +49,8 @@ var LAYER_COUNT = 3;
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_LADDERS = 2;
+var LAYER_TRIGGERS = 3;
+
 var MAP = { tw: 60, th: 15 };
 
 // load an image to draw
@@ -210,6 +212,26 @@ function initialize()
 			isSfxPlaying = false;
 		}
 	});
+
+// initialize trigger layers
+	cells[LAYER_TRIGGERS] = [];
+	var idx = 0;
+	for(var y = 0; y < level1.layers[LAYER_TRIGGERS].height; y++) {
+			cells[LAYER_TRIGGERS][y] = [];
+			for(var x = 0; x < level1.layers[LAYER_TRIGGERS].width; x++) {
+					if(level1.layers[LAYER_TRIGGERS].data[idx] != 0) {
+							cells[LAYER_TRIGGERS][y][x] = 1;
+							cells[LAYER_TRIGGERS][y-1][x] = 1;
+							cells[LAYER_TRIGGERS][y-1][x+1] = 1;
+							cells[LAYER_TRIGGERS][y][x+1] = 1;
+					}
+					else if(cells[LAYER_TRIGGERS][y][x] != 1) {
+							cells[LAYER_TRIGGERS][y][x] = 0;
+					}
+					idx++;
+			}
+	}
+
 }
 
 /*function DrawLevelCollisionData(tileLayer) {
