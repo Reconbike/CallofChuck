@@ -45,10 +45,13 @@ var TILESET_PADDING = 2;
 var TILESET_SPACING = 2;
 var TILESET_COUNT_X = 14;
 var TILESET_COUNT_Y = 14;
+
 var LAYER_COUNT = 3;
+
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_LADDERS = 2;
+
 var LAYER_TRIGGERS = 3;
 
 var MAP = { tw: 60, th: 15 };
@@ -215,7 +218,7 @@ function initialize()
 
 // initialize trigger layers
 	cells[LAYER_TRIGGERS] = [];
-	var idx = 0;
+	idx = 0;
 	for(var y = 0; y < level1.layers[LAYER_TRIGGERS].height; y++) {
 			cells[LAYER_TRIGGERS][y] = [];
 			for(var x = 0; x < level1.layers[LAYER_TRIGGERS].width; x++) {

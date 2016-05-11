@@ -1,11 +1,5 @@
-var level1
-(function(name,data){
- if(typeof onTileMapLoaded === 'undefined') {
-  if(typeof TileMaps === 'undefined') TileMaps = {};
-  TileMaps[name] = data;
- } else {
-  onTileMapLoaded(name,data);
- }})("level1",
+var level1 =
+
 { "height":15,
  "layers":[
         {
@@ -81,4 +75,4 @@ var level1
  "tilewidth":35,
  "version":1,
  "width":60
-});
+};
