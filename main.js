@@ -51,8 +51,13 @@ var LAYER_COUNT = 3;
 var LAYER_BACKGOUND = 0;
 var LAYER_PLATFORMS = 1;
 var LAYER_LADDERS = 2;
-
 var LAYER_TRIGGERS = 3;
+
+var STATE_SPLASH = 0;
+var STATE_GAME = 1;
+var STATE_GAMEWIN = 2;
+var STATE_GAMELOSE = 3;
+var gameState = STATE_SPLASH;
 
 var MAP = { tw: 60, th: 15 };
 
@@ -62,7 +67,7 @@ var keyboard = new Keyboard()
 
  // abitrary choice for 1m
 var METER = TILE;
- // Extreme gravity activated (6x)
+ // Extreme gravity activated (4x)
 var GRAVITY = METER * 9.8 * 6;
  // max horizontal speed possible (10 tiles per second)
 var MAXDX = METER * 10;
@@ -75,9 +80,13 @@ var FRICTION = MAXDX * 6;
  // an instant jump impulse
 var JUMP = METER * 1500;
 
+var Score = 0
+
 
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
+
+
 
 function tileToPixel(tile)
 {
@@ -101,7 +110,7 @@ function bound(value, min, max)
 function cellAtTileCoord(layer,tx,ty)
 {
 	if(tx<0 || tx>=MAP.tw|| ty < 0)
-		return 1;
+		return 0;
 	// let the player drop of the bottom of the screen (this means death)
 	if(ty>=MAP.th)
 		return 0;
@@ -112,7 +121,7 @@ function cellAtTileCoord(layer,tx,ty)
 function cellAtPixelCoord(layer,x,y)
 {
 	if(x<0 || x>SCREEN_WIDTH|| y < 0)
-		return 1;
+		return 0;
 	// let the player drop of the bottom of the screen (this means death)
 	if(y>SCREEN_HEIGHT)
 		return 0;
@@ -204,6 +213,7 @@ function initialize()
 		buffer: true,
 		volume: 0.5
 	});
+
 	musicBackground.play();
 
 	sfxFire = new Howl(
@@ -216,7 +226,27 @@ function initialize()
 		}
 	});
 
-// initialize trigger layers
+
+// initiallize ladder layers for collision
+	cells[LAYER_LADDERS] = [];
+	idx = 0;
+	for(var y = 0; y < level1.layers[LAYER_LADDERS].height; y++) {
+			cells[LAYER_LADDERS][y] = [];
+			for(var x = 0; x < level1.layers[LAYER_LADDERS].width; x++) {
+					if(level1.layers[LAYER_LADDERS].data[idx] != 0) {
+							cells[LAYER_LADDERS][y][x] = 1;
+							cells[LAYER_LADDERS][y-1][x] = 1;
+							cells[LAYER_LADDERS][y-1][x+1] = 1;
+							cells[LAYER_LADDERS][y][x+1] = 1;
+					}
+					else if(cells[LAYER_LADDERS][y][x] != 1) {
+							cells[LAYER_LADDERS][y][x] = 0;
+					}
+					idx++;
+			}
+	}
+
+// initialize trigger layers for collision 
 	cells[LAYER_TRIGGERS] = [];
 	idx = 0;
 	for(var y = 0; y < level1.layers[LAYER_TRIGGERS].height; y++) {
@@ -250,14 +280,25 @@ function initialize()
         }
     }
 }*/
+var splashTimer = 3
+function runSplash(deltaTime)
+    {
+        splashTimer -= deltaTime;
+        if(splashTimer <= 0)
+        {
+            gameState = STATE_GAME;
+            return;
+        }
+        context.fillStyle = "#000";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#ffffff";
+        context.font="24px Arial";
+        context.fillText("Call of Chuck", 250, 240);
+        context.fillText("A Platform Jumper By Brendon Bano", 150, 280);
+}
 
-function run()
+function runGame(deltaTime)
 {
-	context.fillStyle = "#ccc";		
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	
-	var deltaTime = getDeltaTime();
-	
 	player.update(deltaTime);
 
 	drawMap();
@@ -279,6 +320,64 @@ function run()
 	context.fillStyle = "#f00";
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
+}
+
+function runGameWin(deltaTime) //here is where once switched the game win screen is shown, 
+    {
+        context.fillStyle = "#000";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#ffffff";
+        context.font="24px Arial";
+        context.fillText("YOU HAVE WON!!!", 220, 200);
+        context.fillText("Press Shift to Play again", 220, 260);
+        context.fillText("SCORE: " + Score, 220, 230)
+
+    if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true) 
+	{
+		sfxFire.play();
+		window.location.reload(false);
+	}
+}
+
+function runGameLose(deltaTime) //here is where once switched the game over screen is shown, 
+    {
+        context.fillStyle = "#000";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#ffffff";
+        context.font="24px Arial";
+        context.fillText("You have Died! :(", 220, 200);
+        context.fillText("Press Shift to Play again", 220, 260);
+        context.fillText("SCORE: " + Score, 220, 230)
+
+    if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true) 
+	{
+		sfxFire.play();
+		window.location.reload(false);
+	}
+}
+
+function run()
+{
+	context.fillStyle = "#ccc";		
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	
+	var deltaTime = getDeltaTime();
+        switch(gameState)
+        {
+            case STATE_SPLASH:
+            runSplash(deltaTime);
+            break;
+            case STATE_GAME:
+            runGame(deltaTime);
+            break;
+            case STATE_GAMEWIN:
+            runGameWin(deltaTime);
+            break;
+            case STATE_GAMELOSE:
+            runGameLose(deltaTime);
+            break;
+        }
+
 }
 
 initialize();

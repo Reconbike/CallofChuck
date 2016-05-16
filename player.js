@@ -8,10 +8,8 @@ var ANIM_WALK_LEFT = 2;
 var ANIM_IDLE_RIGHT = 3;
 var ANIM_JUMP_RIGHT = 4;
 var ANIM_WALK_RIGHT = 5;
-//var ANIM_CLIMB = 6;
-///var ANIM_SHOOT_LEFT = 7;
-//var ANIM_SHOOT_RIGHT = 8;
-var ANIM_MAX = 6;
+var ANIM_CLIMB = 6;
+var ANIM_MAX = 7;
 
 var Player = function() {
 	this.sprite = new Sprite("ChuckNorris.png");
@@ -21,6 +19,7 @@ var Player = function() {
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,[52, 53, 54, 55, 56, 57, 58, 59]);
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,[60, 61, 62, 63, 64]);
 	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,[65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78]);
+	this.sprite.buildAnimation(12, 8, 165, 126, 0.05,[42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52]);
 
 	for(var i=0; i<ANIM_MAX; i++)
 	{
@@ -43,8 +42,7 @@ var Player = function() {
 
 	this.direction = LEFT;
 
-	this.cooldownTimer = 0;
-
+	this.ladder = false;
 };
 
 Player.prototype.update = function(deltaTime)
@@ -104,13 +102,11 @@ Player.prototype.update = function(deltaTime)
 			this.sprite.setAnimation(ANIM_JUMP_RIGHT);
 		} 
 	 }
-	if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true && this.cooldownTimer <= 0) 
-		{
-			sfxFire.play();
-			this.cooldownTimer = 0.3;
-			console.log("shots fires");
-		}
 
+	 if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.ladder == true) 
+	 {
+	 	this.velocity.y -= METER;
+	 }
 
 
 	 var wasleft = this.velocity.x < 0;
@@ -190,9 +186,35 @@ Player.prototype.update = function(deltaTime)
 	this.velocity.x = 0; // stop horizontal velocity on hit
 			}
 		}
-	if(cellAtTileCoord(LAYER_TRIGGERS, tx, ty) == true)
+
+	if(cellAtTileCoord(LAYER_LADDERS, tx, ty) == true)
 	{
-		// game state switches to VICTORY
+		this.ladder = true;
+		this.sprite.setAnimation(ANIM_CLIMB);
+	}
+		else
+		{
+			this.ladder = false;
+		}
+	if(this.ladder == true)
+	{
+		LAYER_PLATFORMS = 0
+	}	
+		else
+		{
+			LAYER_PLATFORMS = 1
+		}
+
+	if(this.position.y > SCREEN_HEIGHT)
+	{
+		gameState = STATE_GAMELOSE;
+        return;
+	}
+
+	if(cellAtTileCoord(LAYER_TRIGGERS, tx, ty) == true && this.velocity.y == 0)
+	{
+		gameState = STATE_GAMEWIN;
+        return;
 	}
 }
 
