@@ -80,7 +80,8 @@ var FRICTION = MAXDX * 6;
  // an instant jump impulse
 var JUMP = METER * 1500;
 
-var Score = 0
+var Score = 0;
+var Timer = 0;
 
 
 var tileset = document.createElement("img");
@@ -218,7 +219,7 @@ function initialize()
 
 	sfxFire = new Howl(
 	{
-		urls:["fireEffect.ogg"],
+		urls:["Jumping.ogg"],
 		buffer: true,
 		volume: 1,
 		onend: function(){
@@ -317,9 +318,10 @@ function runGame(deltaTime)
 	}		
 
 	// the Following draws the calculated FPS onto the screen
-	context.fillStyle = "#f00";
+	context.fillStyle = "#000";
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
+	context.fillText("SCORE: " + Score, 550, 20)
 }
 
 function runGameWin(deltaTime) //here is where once switched the game win screen is shown, 

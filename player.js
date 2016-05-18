@@ -43,6 +43,11 @@ var Player = function() {
 	this.direction = LEFT;
 
 	this.ladder = false;
+
+	this.cooldownTimer = 0;
+
+	this.lives = 3;
+
 };
 
 Player.prototype.update = function(deltaTime)
@@ -101,6 +106,19 @@ Player.prototype.update = function(deltaTime)
 		{
 			this.sprite.setAnimation(ANIM_JUMP_RIGHT);
 		} 
+	 }
+
+	 if(this.cooldownTimer > 0)
+	{
+		this.cooldownTimer -= deltaTime;
+	}
+
+
+	 if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true  && this.cooldownTimer <= 0) 
+	 {
+	 	sfxFire.play();
+	 	this.cooldownTimer = 0.6;
+
 	 }
 
 	 if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.ladder == true) 
@@ -207,11 +225,17 @@ Player.prototype.update = function(deltaTime)
 
 	if(this.position.y > SCREEN_HEIGHT)
 	{
+		this.lives -= 1;
+		this.position = new Vector2 ( 9*35, 0*35)
+	}
+
+	if(this.lives == 0)
+	{
 		gameState = STATE_GAMELOSE;
         return;
 	}
 
-	if(cellAtTileCoord(LAYER_TRIGGERS, tx, ty) == true && this.velocity.y == 0)
+	if(cellAtTileCoord(LAYER_TRIGGERS, tx, ty) == true)
 	{
 		gameState = STATE_GAMEWIN;
         return;
