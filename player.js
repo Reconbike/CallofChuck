@@ -45,8 +45,7 @@ var Player = function() {
 	this.ladder = false;
 
 	this.cooldownTimer = 0;
-
-	this.lives = 3;
+	this.ScoreTimer = 0;
 
 };
 
@@ -108,17 +107,28 @@ Player.prototype.update = function(deltaTime)
 		} 
 	 }
 
+	 if(this.ScoreTimer > 0)
+	 {
+		this.ScoreTimer -= deltaTime;
+	 }
+
 	 if(this.cooldownTimer > 0)
-	{
+	 {
 		this.cooldownTimer -= deltaTime;
 	}
-
+ 
 
 	 if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true  && this.cooldownTimer <= 0) 
 	 {
 	 	sfxFire.play();
 	 	this.cooldownTimer = 0.6;
 
+	 }
+
+	 if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true && this.ScoreTimer <= 0) 
+	 {
+	 	Score += 10;
+	 	this.ScoreTimer = 0.6;
 	 }
 
 	 if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.ladder == true) 
@@ -216,20 +226,23 @@ Player.prototype.update = function(deltaTime)
 		}
 	if(this.ladder == true)
 	{
-		LAYER_PLATFORMS = 0
+		LAYER_PLATFORMS = 0;
+		GRAVITY = 0;
 	}	
 		else
 		{
-			LAYER_PLATFORMS = 1
+			LAYER_PLATFORMS = 1;
+			GRAVITY = METER * 9.8 * 6;
 		}
 
 	if(this.position.y > SCREEN_HEIGHT)
 	{
-		this.lives -= 1;
-		this.position = new Vector2 ( 9*35, 0*35)
+		Lifes -= 1;
+		this.position = new Vector2 ( 9*35, 0*35);
+		Score -= 100;
 	}
 
-	if(this.lives == 0)
+	if(Lifes == 0)
 	{
 		gameState = STATE_GAMELOSE;
         return;

@@ -82,10 +82,16 @@ var JUMP = METER * 1500;
 
 var Score = 0;
 var Timer = 0;
-
+var Lifes = 3;
+var splashTimer = 3;
+var TimerCoolDown = 0;
 
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
+var Face = document.createElement("img");
+Face.src = "Face.png";
+var TimerClock = document.createElement("img");
+TimerClock.src = "TimerClock.png";
 
 
 
@@ -281,7 +287,7 @@ function initialize()
         }
     }
 }*/
-var splashTimer = 3
+
 function runSplash(deltaTime)
     {
         splashTimer -= deltaTime;
@@ -315,13 +321,31 @@ function runGame(deltaTime)
 		fpsTime -= 1;
 		fps = fpsCount;
 		fpsCount = 0;
-	}		
+	}
 
-	// the Following draws the calculated FPS onto the screen
+
+	// My version of creating a timer
+	if(TimerCoolDown > 0)
+	{
+		TimerCoolDown -= deltaTime;
+	}
+
+	if(Timer >=0 && TimerCoolDown <=0)
+	{
+		Timer +=1;
+		TimerCoolDown +=1;
+	}
+
+	// the Following draws the calculated FPS onto the screen and needed UI
 	context.fillStyle = "#000";
-	context.font="14px Arial";
+	context.font="20px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
-	context.fillText("SCORE: " + Score, 550, 20)
+	context.fillText("SCORE: " + Score, 500, 20)
+	context.fillText(Lifes + " X ", 30, 450)
+	context.drawImage(Face, 70,400)
+	context.fillText("Time: " + Timer, 5, 130)
+	context.drawImage(TimerClock, 5 ,30)
+
 }
 
 function runGameWin(deltaTime) //here is where once switched the game win screen is shown, 
@@ -331,8 +355,9 @@ function runGameWin(deltaTime) //here is where once switched the game win screen
         context.fillStyle = "#ffffff";
         context.font="24px Arial";
         context.fillText("YOU HAVE WON!!!", 220, 200);
-        context.fillText("Press Shift to Play again", 220, 260);
+        context.fillText("Press Shift to Play again", 220, 290);
         context.fillText("SCORE: " + Score, 220, 230)
+        context.fillText("With a time of " + Timer + " Seconds", 220, 260)
 
     if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true) 
 	{
